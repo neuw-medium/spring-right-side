@@ -1,6 +1,7 @@
 package in.neuw.right;
 
 import in.neuw.right.config.properties.JwksProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,6 +9,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 import javax.annotation.PostConstruct;
 
+@Slf4j
 @SpringBootApplication
 @EnableConfigurationProperties(JwksProperties.class)
 public class SpringRightSideApplication {
@@ -21,8 +23,8 @@ public class SpringRightSideApplication {
 
     @PostConstruct
     public void afterInit() {
-        System.out.println("jwksProperties getJwks - "+ jwksProperties.getJwks());
-        System.out.println("jwksProperties getIssuers - "+ jwksProperties.getIssuers());
+        log.info("jwksProperties getJwks initialized - "+ jwksProperties.getJwks());
+        log.info("jwksProperties getIssuers initialized - "+ jwksProperties.getIssuers());
     }
 
 }

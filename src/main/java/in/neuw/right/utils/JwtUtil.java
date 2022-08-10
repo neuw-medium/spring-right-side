@@ -8,6 +8,7 @@ import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import in.neuw.right.config.properties.JwksProperties;
+import in.neuw.right.models.UserData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,10 +19,12 @@ import java.net.URL;
 import java.security.interfaces.ECPublicKey;
 import java.text.ParseException;
 import java.time.Instant;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+
+import static net.andreinc.mockneat.unit.user.Emails.emails;
+import static net.andreinc.mockneat.unit.user.Genders.genders;
+import static net.andreinc.mockneat.unit.user.Names.names;
+import static net.andreinc.mockneat.unit.user.Users.users;
 
 /**
  * @author Karanbir Singh on 08/10/2022
@@ -87,6 +90,7 @@ public class JwtUtil {
     }
 
     public String createResponseToken(final Map<String, Object> inputDataMap,
+                                      final Object responseData,
                                       final String correlationId) throws JOSEException {
         String issuerName = (String) inputDataMap.get("issuer_name");
         JWKSet jwkSet;
@@ -117,13 +121,12 @@ public class JwtUtil {
         var jweHeader = new JWEHeader.Builder(JWEAlgorithm.ECDH_ES_A256KW, EncryptionMethod.A128CBC_HS256)
                 .customParam("issuer_name", "right-side")
                 .keyID(ecKey.getKeyID()).build();
-        System.out.println("jweHeader.getKeyID() "+jweHeader.getKeyID());
 
         var payload = new JWTClaimsSet.Builder()
                 .issuer("right-side")
                 .audience("left-side")
                 .subject("data-share")
-                .claim("test", "test")
+                .claim("data", responseData)
                 .expirationTime(Date.from(Instant.now().plusSeconds(120)))
                 .build();
 

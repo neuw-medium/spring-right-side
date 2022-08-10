@@ -20,7 +20,7 @@
 
     <logger name="root" additivity="false" level="info">
         <appender-ref ref="jsonBasedAppender"/>
-        <appender-ref ref="consoleBasedAppender"/>
+        <!--<appender-ref ref="consoleBasedAppender"/>-->
     </logger>
 
 </configuration>
