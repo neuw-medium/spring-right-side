@@ -1,0 +1,34 @@
+package in.neuw.right.services;
+
+import com.nimbusds.jose.JOSEException;
+import in.neuw.right.models.RightSideResponse;
+import in.neuw.right.models.RightSideSignedRequest;
+import in.neuw.right.utils.JwtUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
+
+import java.text.ParseException;
+import java.util.Map;
+
+/**
+ * @author Karanbir Singh on 08/10/2022
+ */
+@Slf4j
+@Service
+public class RightSideService {
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    public Mono<RightSideResponse> getResponse(RightSideSignedRequest request, String correlationId) throws ParseException, JOSEException {
+        Map<String, Object> inputDataMap = jwtUtil.validateRequestToken(request.getData());
+        // generally we will make use of the inputDataObjectMap to construct the reponse
+        String token = jwtUtil.createResponseToken(inputDataMap, correlationId);
+        RightSideResponse response = new RightSideResponse();
+        response.setData(token).setCorrelationId(correlationId);
+        return Mono.just(response);
+    }
+
+}
